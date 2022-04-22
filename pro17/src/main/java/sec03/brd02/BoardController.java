@@ -122,7 +122,7 @@ public class BoardController extends HttpServlet {
 						}
 						
 						String fileName = fileItem.getName().substring(idx + 1);
-						articleMap.put(fileItem.getFieldName(). fileName);
+						articleMap.put(fileItem.getFieldName(), fileName);
 						File uploadFile = new File(currentDirPath + "\\" + fileName);
 						fileItem.write(uploadFile);
 								

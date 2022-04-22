@@ -12,26 +12,26 @@
 <title>글쓰기창</title>
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript">
-   function readURL(input) {
-      if (input.files && input.files[0]) {
-	      var reader = new FileReader();
-	      reader.onload = function (e) {
-	        $('#preview').attr('src', e.target.result);
-          }
-         reader.readAsDataURL(input.files[0]);
-      }
-  }  
-  function backToList(obj){
-    obj.action="${contextPath}/board/listArticles.do";
-    obj.submit();
-  }
+function readURL(input){
+	if(input.files&& input.file[0]){
+		var reader = new FileReader();
+		reader.onload = function(e){
+			$('#preview').attr('src', e.target.result);
+		}
+		reader.readAsDataURL(input.files[0]);
+	}
+}
+function backToList(obj){
+	obj.action = "${contextPath}/board/listArticles.do";
+	obj.submit();
+}
 
 </script>
  <title>새글 쓰기 창</title>
 </head>
 <body>
 <h1 style="text-align:center">새글 쓰기</h1>
-  <form name="articleForm" method="post"   action="${contextPath}/board/addArticle.do"   enctype="multipart/form-data">
+  <form name = "articleForm" method = "post" action = "${contextPath}/board/addArticle.do" enctype = "multipart/form-data">
     <table border=0 align="center">
      <tr>
 	   <td align="right">글제목: </td>
