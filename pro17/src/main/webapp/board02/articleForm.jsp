@@ -13,12 +13,14 @@
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript">
 function readURL(input){
-	if(input.files&& input.file[0]){
+	if(input.files && input.files[0]){
 		var reader = new FileReader();
 		reader.onload = function(e){
 			$('#preview').attr('src', e.target.result);
+			
 		}
 		reader.readAsDataURL(input.files[0]);
+		
 	}
 }
 function backToList(obj){
@@ -50,7 +52,7 @@ function backToList(obj){
 	    <td align="right"> </td>
 	    <td colspan="2">
 	       <input type="submit" value="글쓰기" />
-	       <input type=button value="목록보기"onClick="backToList(this.form)" />
+	       <input type=button value="목록보기" onClick="backToList(this.form)" />
 	    </td>
      </tr>
     </table>
