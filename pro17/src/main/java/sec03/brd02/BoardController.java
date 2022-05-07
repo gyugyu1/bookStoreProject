@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -107,32 +106,31 @@ public class BoardController extends HttpServlet {
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		try {
 			List items = upload.parseRequest(request);
-			for (int i = 0; i < items.size(); i++) {
+			for(int i = 0; i < items.size() ; i++) {
 				FileItem fileItem = (FileItem) items.get(i);
-				if (fileItem.isFormField()) {
+				if(fileItem.isFormField()) {
 					System.out.println(fileItem.getFieldName() + "=" + fileItem.getString(encoding));
 					articleMap.put(fileItem.getFieldName(), fileItem.getString(encoding));
-				} else {
-					System.out.println("파라미터명:" + fileItem.getFieldName());
-					//System.out.println("파일명:" + fileItem.getName());
-					System.out.println("파일크기:" + fileItem.getSize() + "bytes");
-					//articleMap.put(fileItem.getFieldName(), fileItem.getName());
-					if (fileItem.getSize() > 0) {
+				}else {
+					System.out.println("파라미터이름 : " + fileItem.getFieldName());
+					System.out.println("파일이름:" + fileItem.getName());
+					System.out.println("파일크기:" + fileItem.getSize());
+					
+					if(fileItem.getSize() > 0 ) {
 						int idx = fileItem.getName().lastIndexOf("\\");
-						if (idx == -1) {
+						if(idx==-1) {
 							idx = fileItem.getName().lastIndexOf("/");
+							
 						}
-
-						String fileName = fileItem.getName().substring(idx + 1);
-						System.out.println("파일명:" + fileName);
-						articleMap.put(fileItem.getFieldName(), fileName);  //익스플로러에서 업로드 파일의 경로 제거 후 map에 파일명 저장
+						String fileName = fileItem.getName().substring(idx+i);
+						articleMap.put(fileItem.getFieldName(), fileName);
 						File uploadFile = new File(currentDirPath + "\\" + fileName);
 						fileItem.write(uploadFile);
-
-					} // end if
-				} // end if
-			} // end for
-		} catch (Exception e) {
+					}
+					
+				}
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return articleMap;
