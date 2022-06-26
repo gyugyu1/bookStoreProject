@@ -24,7 +24,6 @@ public class MemberControllerImpl extends MultiActionController implements Membe
 		List<MemberVO> membersList = memberService.listMembers();
 		ModelAndView mav = new ModelAndView(viewName);
 		mav.addObject("membersList",membersList);
-		
 		return mav;
 	}
 

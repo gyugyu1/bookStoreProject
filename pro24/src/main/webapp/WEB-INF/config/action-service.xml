@@ -11,5 +11,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
       <property name="memberDAO" ref="memberDAO"/>
    </bean>
    
-   
+   <bean id = "accService" class="com.spring.account.AccountService">
+   		<property name = "accDAO" ref = "accDAO"/>
+   </bean>
 </beans>

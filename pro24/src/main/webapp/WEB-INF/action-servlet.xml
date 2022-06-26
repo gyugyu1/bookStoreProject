@@ -20,34 +20,25 @@
       <property name="suffix" value=".jsp"/>
    </bean>
    
-   <bean id="memberController" 
-                            class="com.spring.member.controller.MemberControllerImpl">
-      <property name="methodNameResolver">
-         <ref local="memberMethodResolver"/>
-      </property>
-      <property name="memberService" ref="memberService"/>
-   </bean>
-
-   <bean  id="memberMethodResolver"
-   class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver" >
-      <property  name="mappings" >
-        <props>
-          <prop key="/member/listMembers.do" >listMembers</prop>
-          <prop key="/member/addMember.do" >addMember</prop>
-          <prop key="/member/removeMember.do">removeMember</prop>
-          <prop key="/member/memberForm.do" >form</prop>
-       </props>
-      </property>
+   <bean id ="accController" class="com.spring.account.AccountController">
+   		<property name = "methodNameResolver">
+   			<ref local = "methodResolver"/>	
+   		</property>
    </bean>
    
+	<bean id= "methodResolver" class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+		<property name="mappings">
+			<props>
+				<prop key = "/account/sendMoney.do">sendMoney</prop>
+			</props>
+		</property>
+	</bean>
    
-   <bean id="memberUrlMapping"
-       class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-      <property name="mappings">
-         <props>
-            <prop key="/member/*.do">memberController</prop>
-         </props>
-      </property>
+   <bean id = "urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+   		<property name = "mappings">
+   			<props>
+   				<prop key = "/acoount/*.do">accController</prop>
+   			</props>
+   		</property>
    </bean>
-   
 </beans>
