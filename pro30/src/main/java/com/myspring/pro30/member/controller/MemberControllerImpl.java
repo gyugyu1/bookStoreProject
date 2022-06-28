@@ -82,17 +82,17 @@ public class MemberControllerImpl implements MemberController {
 	public ModelAndView login(@ModelAttribute("member") MemberVO member, RedirectAttributes rAttr, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		 
 		MemberVO memberVO = memberService.login(member);
-		ModelAndView mav = null;
+		ModelAndView mav = new ModelAndView();
 		if(memberVO != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("isLogOn", true);
 			session.setAttribute("member", memberVO);
 			String action = (String) session.getAttribute("action");
 			session.removeAttribute("action");
-			if(action == null) {
-				mav.setViewName("redirect:/member/listMembers.do");
-			}else {
+			if(action != null) {
 				mav.setViewName("redirect:" + action);
+			}else {
+				mav.setViewName("redirect:/member/listMembers.do");
 			}
 		}else {
 			rAttr.addAttribute("result","loginFailed"); //리다이렉트할때 result에 특정값넣어서 로그인 실패 전달 -> jsp에서 팝업으로 처리

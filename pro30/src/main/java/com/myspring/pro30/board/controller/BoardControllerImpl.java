@@ -65,6 +65,54 @@ public class BoardControllerImpl implements BoardController {
 			articleMap.put(name, value);
 		} //articleMap에 넘어온 파라미터들 저장 -> 글 insert를 위한 정보
 		
+		String imageFileName = upload(multipartRequest); //업로드한 파일의 이름을 반환
+		HttpSession session = multipartRequest.getSession();
+		MemberVO memberVO = (MemberVO) session.getAttribute("member"); // 로그인시에 세션에 저장된 memberVO 객체 받아옴
+		String id = memberVO.getId();
+		articleMap.put("parentNO", 0);
+		articleMap.put("id", id);
+		articleMap.put("imageFileName", imageFileName);
+		
+		String message;
+		
+		ResponseEntity resEnt = null;
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add("Content-Type", "text/html;charset=utf-8");
+		
+		try {
+			int articleNO = boardService.addNewArticle(articleMap);
+			if(imageFileName != null && imageFileName.length() !=0) {
+				File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp"+ "\\" + imageFileName);
+				File destDir= new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
+				FileUtils.moveFileToDirectory(srcFile, destDir, true); // 이동할파일, 목적지 파일, 목적지 폴더 생성 유무(?) false면 exception 발생
+				
+			}
+			message ="<script>";
+			message += "alert('새글을 추가했습니다.');";
+			message += "location.href = '" + multipartRequest.getContextPath() + "/board/listArticles.do';";
+			message += "</script>";
+			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			// 바디, 헤더 , 상태
+			
+			
+					
+		} catch (Exception e) {
+			File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
+			srcFile.delete();
+			message = "<script>";
+			message += "alert('오류가 발생했습니다. 다시 시도 ㄱ');";
+			message += "location.href='" + multipartRequest.getContextPath() + "/board/articleForm.do';";
+			message += "</script>";
+			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			e.printStackTrace();
+		}
+		return resEnt;
+				
+		
+		
+				
+		
+		
 		
 		
 		
