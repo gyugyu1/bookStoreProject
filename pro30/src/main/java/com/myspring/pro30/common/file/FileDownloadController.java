@@ -24,7 +24,17 @@ public class FileDownloadController {
 		File file = new File(downFile);
 		
 		response.setHeader("Cache-control", "no-cache");
-		
+		response.addHeader("Content-disposition", "attachment; fileName=" + imageFileName);
+		FileInputStream in = new FileInputStream(file);
+		byte[] buffer = new byte[1024 * 8];
+		while (true) {
+			int count = in.read(buffer); 
+			if (count == -1) 
+				break;
+			out.write(buffer, 0, count);
+		}
+		in.close();
+		out.close();
 	}
 
 }

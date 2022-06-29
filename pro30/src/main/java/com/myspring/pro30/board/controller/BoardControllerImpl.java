@@ -153,46 +153,50 @@ public class BoardControllerImpl implements BoardController {
 	public ResponseEntity modArticle(MultipartHttpServletRequest multipartRequest, HttpServletResponse response) throws Exception {
 		multipartRequest.setCharacterEncoding("utf-8");
 		Map<String, Object> articleMap = new HashMap<String, Object>();
-		Enumeration enu = multipartRequest.getParameterNames();
-		while (enu.hasMoreElements()) {
-			String name = (String) enu.nextElement();
-			String value = multipartRequest.getParameter(name);
+		Enumeration<String> enu = multipartRequest.getAttributeNames();
+		
+		while(enu.hasMoreElements()) {
+			String name = enu.nextElement();
+			String value = (String)multipartRequest.getAttribute(name);
 			articleMap.put(name, value);
 		}
-
+		
 		String imageFileName = upload(multipartRequest);
 		articleMap.put("imageFileName", imageFileName);
-
-		String articleNO = (String) articleMap.get("articleNO");
+		HttpSession httpSession = multipartRequest.getSession();
+		
+		String articleNO = (String)articleMap.get("articleNO");
 		String message;
 		ResponseEntity resEnt = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		
 		try {
 			boardService.modArticle(articleMap);
-			if (imageFileName != null && imageFileName.length() != 0) {
-				File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
-				File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
-				FileUtils.moveFileToDirectory(srcFile, destDir, true);
-
-				String originalFileName = (String) articleMap.get("originalFileName");
+			if(imageFileName!=null && imageFileName.length() !=0) {
+				File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName); //임시 폴더에 있는 파일을 지정
+				File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO); // 게시글 번호로 폴더 지정
+				FileUtils.moveFileToDirectory(srcFile, destDir, true); //임시 폴더에 있던 파일을 본 폴더로 이동, true로 설정해서 자동으로 폴더 생성
+				
+				String originalFileName = (String)articleMap.get("originalFileName"); //jsp단에 hidden으로 저장되어 있음
 				File oldFile = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO + "\\" + originalFileName);
 				oldFile.delete();
 			}
-			message = "<script>";
-			message += " alert('글을 수정했습니다.');";
-			message += " location.href='" + multipartRequest.getContextPath() + "/board/viewArticle.do?articleNO=" + articleNO + "';";
-			message += " </script>";
-			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+			
+		       message = "<script>";
+			   message += " alert('글을 수정했습니다.');";
+			   message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
+			   message +=" </script>";
+		       resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
 		} catch (Exception e) {
-			File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
-			srcFile.delete();
-			message = "<script>";
-			message += " alert('오류가 발생했습니다.다시 수정해주세요');";
-			message += " location.href='" + multipartRequest.getContextPath() + "/board/viewArticle.do?articleNO=" + articleNO + "';";
-			message += " </script>";
-			resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
-		}
+		      File srcFile = new File(ARTICLE_IMAGE_REPO+"\\"+"temp"+"\\"+imageFileName); //임시로 폴더에 있던 파일 지정
+		      srcFile.delete();
+		      message = "<script>";
+			  message += " alert('오류가 발생했습니다.다시 수정해주세요');";
+			  message += " location.href='"+multipartRequest.getContextPath()+"/board/viewArticle.do?articleNO="+articleNO+"';";
+			  message +=" </script>";
+		      resEnt = new ResponseEntity(message, responseHeaders, HttpStatus.CREATED);
+		}			
 		return resEnt;
 	}
 
@@ -297,7 +301,7 @@ public class BoardControllerImpl implements BoardController {
 		
 		Iterator<String> fileNames = multipartRequest.getFileNames();
 		while(fileNames.hasNext()) {
-			String fileName = fileNames.next(); //imageFileName
+			String fileName = fileNames.next(); //파일 이름만 반환 받아서 String 형으로 저장
 			MultipartFile mFile = multipartRequest.getFile(fileName);
 			
 			imageFileName = mFile.getOriginalFilename();
@@ -308,9 +312,9 @@ public class BoardControllerImpl implements BoardController {
 			File file = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + fileName);
 			if(mFile.getSize()!=0) {
 				if(!file.exists()) {
-					file.getParentFile().mkdirs();
+					file.getParentFile().mkdirs(); // temp까지만 폴더 생성
 					System.out.println("패어런트파일 : " + file.getParentFile().toString()); //temp 까지만
-					mFile.transferTo(new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName)); //imageFileName으로 mFile을 생성
+					mFile.transferTo(new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName)); //imageFileName으로 mFile을 생성, 임시폴더에 저장
 				}
 			}
 		}
