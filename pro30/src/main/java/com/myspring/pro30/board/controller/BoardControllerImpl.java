@@ -19,12 +19,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.myspring.pro30.board.service.BoardService;
@@ -44,9 +46,11 @@ public class BoardControllerImpl implements BoardController {
 	@RequestMapping(value = "/board/listArticles.do", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView listArticles(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
+		HttpSession session = request.getSession();
 		List articlesList = boardService.listArticles();
 		ModelAndView mav = new ModelAndView(viewName);
 		mav.addObject("articlesList", articlesList);
+		System.out.println("현재세션 : " + session.getAttribute("member") + "," + session.getAttribute("isLogOn") );
 		return mav;
 
 	}
@@ -84,7 +88,7 @@ public class BoardControllerImpl implements BoardController {
 			if(imageFileName != null && imageFileName.length() !=0) {
 				File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp"+ "\\" + imageFileName);
 				File destDir= new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
-				FileUtils.moveFileToDirectory(srcFile, destDir, true); // 이동할파일, 목적지 파일, 목적지 폴더 생성 유무(?) false면 exception 발생
+				FileUtils.moveFileToDirectory(srcFile, destDir, true); // 이동할파일, 목적지 파일, 목적지 폴더 생성 할건지 true면 목적지 폴더생성 false면 exception 발생
 				
 			}
 			message ="<script>";
@@ -123,11 +127,11 @@ public class BoardControllerImpl implements BoardController {
 	// 한개의 이미지 보여주기
 	@RequestMapping(value = "/board/viewArticle.do", method = RequestMethod.GET)
 	public ModelAndView viewArticle(@RequestParam("articleNO") int articleNO, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String viewName = (String) request.getAttribute("viewName");
+		String viewName = (String)request.getAttribute("viewName");
 		articleVO = boardService.viewArticle(articleNO);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName(viewName);
-		mav.addObject("article", articleVO);
+		mav.addObject("article",articleVO);
 		return mav;
 	}
 
@@ -290,23 +294,31 @@ public class BoardControllerImpl implements BoardController {
 	// 한개 이미지 업로드하기
 	private String upload(MultipartHttpServletRequest multipartRequest) throws Exception {
 		String imageFileName = null;
+		
 		Iterator<String> fileNames = multipartRequest.getFileNames();
-
-		while (fileNames.hasNext()) {
-			String fileName = fileNames.next();
+		while(fileNames.hasNext()) {
+			String fileName = fileNames.next(); //imageFileName
 			MultipartFile mFile = multipartRequest.getFile(fileName);
+			
 			imageFileName = mFile.getOriginalFilename();
+			
+			  System.out.println("imageFileName:" + imageFileName);
+			  System.out.println("fileName:" + fileName);
+			 
 			File file = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + fileName);
-			if (mFile.getSize() != 0) { // File Null Check
-				if (!file.exists()) { // 경로상에 파일이 존재하지 않을 경우
-					file.getParentFile().mkdirs(); // 경로에 해당하는 디렉토리들을 생성
-					mFile.transferTo(new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName)); // 임시로 저장된 multipartFile을 실제 파일로 전송
+			if(mFile.getSize()!=0) {
+				if(!file.exists()) {
+					file.getParentFile().mkdirs();
+					System.out.println("패어런트파일 : " + file.getParentFile().toString()); //temp 까지만
+					mFile.transferTo(new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName)); //imageFileName으로 mFile을 생성
 				}
 			}
-
 		}
 		return imageFileName;
 	}
+	
+}
+		
 
 	/*
 	 * //다중 이미지 업로드하기 private List<String> upload(MultipartHttpServletRequest
@@ -322,4 +334,3 @@ public class BoardControllerImpl implements BoardController {
 	 * +"\\"+"temp"+ "\\"+originalFileName)); //임시로 저장된 multipartFile을 실제 파일로 전송 } }
 	 * } return fileList; }
 	 */
-}
