@@ -22,8 +22,9 @@
 <title>글목록창</title>
 </head>
 <script>
-	function fn_articleForm(isLogOn, articleForm, loginForm){
-		if(isLogOn != '' && isLogOn != 'false' ){
+	function fn_articleForm(isLogOn, member, articleForm, loginForm){
+		if(isLogOn != '' && isLogOn != 'false' && member != null && member !=''  ){
+			alert(member);
 			location.href = articleForm;
 		}else{
 			alert("로그인 후 글쓰기가 가능합니다.");
@@ -76,7 +77,7 @@
 		</c:choose>
 	</table>
 	<!-- <a  class="cls1"  href="#"><p class="cls2">글쓰기</p></a> -->
-	<a class="cls1" href="javascript:fn_articleForm('${isLogOn}','${contextPath}/board/articleForm.do', 
+	<a class="cls1" href="javascript:fn_articleForm('${isLogOn}','${member}','${contextPath}/board/articleForm.do', 
                                                     '${contextPath}/member/loginForm.do')">
 		<p class="cls2">글쓰기</p>
 	</a>

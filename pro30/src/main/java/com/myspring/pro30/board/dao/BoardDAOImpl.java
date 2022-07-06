@@ -34,10 +34,10 @@ public class BoardDAOImpl implements BoardDAO {
 	}
     
 	//다중 파일 업로드
-	/*
+	
 	@Override
 	public void insertNewImage(Map articleMap) throws DataAccessException {
-		List<ImageVO> imageFileList = (ArrayList)articleMap.get("imageFileList");
+		List<ImageVO> imageFileList = (ArrayList)articleMap.get("imageFileList"); //파라미터에서 이미지 파일 리스트를 받아오고
 		int articleNO = (Integer)articleMap.get("articleNO");
 		int imageFileNO = selectNewImageFileNO();
 		for(ImageVO imageVO : imageFileList){
@@ -47,7 +47,7 @@ public class BoardDAOImpl implements BoardDAO {
 		sqlSession.insert("mapper.board.insertNewImage",imageFileList);
 	}
 	
-   */
+   
 	
 	@Override
 	public ArticleVO selectArticle(int articleNO) throws DataAccessException {
