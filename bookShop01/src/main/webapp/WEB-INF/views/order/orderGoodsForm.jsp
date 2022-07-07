@@ -105,12 +105,16 @@
 
   function init(){
   	var form_order=document.form_order;
+  	
   	var h_tel1=form_order.h_tel1;
   	var h_hp1=form_order.h_hp1;
+  	
   	var tel1=h_tel1.value;
   	var hp1=h_hp1.value;
+  	
   	var select_tel1=form_order.tel1;
   	var select_hp1=form_order.hp1;
+  	
   	select_tel1.value=tel1;
   	select_hp1.value=hp1;
   }    
@@ -632,7 +636,7 @@ function fn_process_pay_order(){
 					</td>
 					<input type="hidden" id="h_tel1" name="h_tel1" value="${orderer.tel1 }" />
 					<input type="hidden" id="h_tel2" name="h_tel2"	value="${orderer.tel2 }" />
-					<input type="hidden" id="h_tel3" name="h_tel3"value="${orderer.tel3 }" />
+					<input type="hidden" id="h_tel3" name="h_tel3" value="${orderer.tel3 }" />
 				</tr>
 				<tr class="dot_line">
 					<td class="fixed_join">주소</td>
