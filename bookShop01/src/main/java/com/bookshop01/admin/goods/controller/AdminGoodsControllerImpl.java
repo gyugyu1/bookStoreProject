@@ -126,6 +126,7 @@ public class AdminGoodsControllerImpl extends BaseController  implements AdminGo
 					File srcFile = new File(CURR_IMAGE_REPO_PATH+"\\"+"temp"+"\\"+imageFileName);
 					File destDir = new File(CURR_IMAGE_REPO_PATH+"\\"+goods_id);
 					FileUtils.moveFileToDirectory(srcFile, destDir,true);
+					//파일이동
 				}
 			}
 			message= "<script>";
