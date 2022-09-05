@@ -50,7 +50,7 @@
     ```sql
     <insert id="insertNewOrder" parameterType="orderVO" >
         <selectKey resultType ="int" keyProperty = "order_seq_num" order = "BEFORE">
-            <select order_seq_num.nextval form dual>
+            <select order_seq_num.nextval form dual>s
         </selelctKey>
 
         insert into t_shopping_order(order_seq_num,
