@@ -92,3 +92,16 @@
     위 코드를 실행하면 insert가 실행될 때 마다 시퀀스는 400에서 1씩 증가하게 되어 insert시에 시퀀스 값이 삽입된다.  
 
 참고:https://gent.tistory.com/393 , https://offbyone.tistory.com/239
+
+
+
+## Oracle table 만들기
+
+```sql
+create table 테이블이름(
+컬럼명 데이터타입 조건,
+칼럼명 데이터타입 조건,
+...
+
+)
+```
